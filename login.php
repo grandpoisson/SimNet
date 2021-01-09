@@ -8,7 +8,7 @@
   <div class="col-sm-6">
     <form action="login.php" method="post">
       <div class="form-group">
-        <label for="username">Staff Number</label>
+        <label for="staffnumber">Staff Number</label>
         <input type="text" name="staffnumber" class="form-control">
       </div>
       <div class="form-group">
