@@ -49,7 +49,7 @@ function showAllData() {
           die("Query failed" . mysqli_error($connection));
       }
       while($row = mysqli_fetch_assoc($result)) {
-        $userid = $row['userid'];
+        $userid = $row['userID'];
         echo "<option value='$userid'>$userid</option>";
     }
 }
@@ -63,12 +63,12 @@ function updateTable() {
         $firstname = mysqli_real_escape_string($connection, $firstname);
         $lastname = mysqli_real_escape_string($connection, $lastname);
         $password = mysqli_real_escape_string($connection, $password);
-        $userid = $_POST['userid'];
+        $userid = $_POST['userID'];
         $query = "UPDATE tblengusers SET ";
         $query .= "firstname = '$firstname', ";
         $query .= "lastname = '$lastname', ";
         $query .= "password = '$password' ";
-        $query .= "WHERE userid = $userid ";
+        $query .= "WHERE userID = $userid ";
         $result = mysqli_query($connection, $query);
         if(!$result) {
             die("Query failed" . mysqli_error($connection));
@@ -83,7 +83,7 @@ function deleteRows() {
         $password = $_POST['password'];
         $userid = $_POST['userid'];
         $query = "DELETE FROM tblengusers ";
-        $query .= "WHERE userid = $userid ";
+        $query .= "WHERE userID = $userid ";
         $result = mysqli_query($connection, $query);
         if(!$result) {
             die("Query failed" . mysqli_error($connection));
