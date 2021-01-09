@@ -1,15 +1,22 @@
 <?php include "db.php"; ?>
 <?php
 
+function login(){
+
+
+}
+
 function createRows(){   
     if (isset($_POST['submit'])) {
         global $connection;
+        $staffnumber = $_POST['staffnumber'];
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $password = $_POST['password'];
         $pmtadmin = $_POST['pmtadmin'];
         $qtgvalidator = $_POST['qtgvalidator'];
         //Use the below mysqli function to help prevent SQL Injection 
+        $staffnumber = mysqli_real_escape_string($connection, $staffnumber);
         $firstname = mysqli_real_escape_string($connection, $firstname);
         $lastname = mysqli_real_escape_string($connection, $lastname);
         $password = mysqli_real_escape_string($connection, $password);
@@ -22,8 +29,8 @@ function createRows(){
         $hashF_and_salt = $hashFormat . $salt;
         $password = crypt($password, $hashF_and_salt);
 
-        $query = "INSERT INTO tblengusers(firstname, lastname, password, pmtadmin, qtgvalidator) ";
-        $query .= "VALUES ('$firstname', '$lastname', '$password', '$pmtadmin', '$qtgvalidator') ";
+        $query = "INSERT INTO tblengusers(staffnumber, firstname, lastname, password, pmtadmin, qtgvalidator) ";
+        $query .= "VALUES ('$staffnumber', '$firstname', '$lastname', '$password', '$pmtadmin', '$qtgvalidator') ";
         $result = mysqli_query($connection, $query);
         if(!$result) {
           die('Query failed' . mysqli_error($connection));
@@ -56,15 +63,18 @@ function showAllData() {
 function updateTable() {
     if(isset($_POST['submit'])){
         global $connection;
+        $staffnumber = $_POST['staffnumber'];
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $password = $_POST['password'];
         //Use the below mysqli function to help prevent SQL Injection 
+        $staffnumber = mysqli_real_escape_string($connection, $staffnumber);
         $firstname = mysqli_real_escape_string($connection, $firstname);
         $lastname = mysqli_real_escape_string($connection, $lastname);
         $password = mysqli_real_escape_string($connection, $password);
         $userid = $_POST['userID'];
         $query = "UPDATE tblengusers SET ";
+        $query .= "staffnumber = '$staffnumber', ";
         $query .= "firstname = '$firstname', ";
         $query .= "lastname = '$lastname', ";
         $query .= "password = '$password' ";

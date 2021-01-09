@@ -8,11 +8,15 @@
     <h1 class="text-center">Create</h1>
     <form action="login_create.php" method="post">
       <div class="form-group">
-        <label for="username">Firstname</label>
+        <label for="staffnumber">Staff Number</label>
+        <input type="text"name="staffnumber" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="username">Firstvname</label>
         <input type="text"name="firstname" class="form-control">
       </div>
       <div class="form-group">
-        <label for="username">Lastname</label>
+        <label for="username">Lastvname</label>
         <input type="text"name="lastname" class="form-control">
       </div>
       <div class="form-group">
