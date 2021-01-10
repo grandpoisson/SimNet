@@ -4,25 +4,25 @@ session_start();
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-  header("location: welcome.php");
-  exit;
+    header("location: welcome.php");
+    exit;
 }
  
 // Include config file
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = "";
-$username_err = $password_err = "";
+$username = $password = $firstname = "";
+$staffnumber_err = $password_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
-    // Check if username is empty
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter username.";
+    // Check if staffnumber is empty
+    if(empty(trim($_POST["staffnumber"]))){
+        $staffnumber_err = "Please enter staffnumber.";
     } else{
-        $username = trim($_POST["username"]);
+        $staffnumber = trim($_POST["staffnumber"]);
     }
     
     // Check if password is empty
@@ -33,35 +33,36 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Validate credentials
-    if(empty($username_err) && empty($password_err)){
+    if(empty($staffnumber_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        $sql = "SELECT userid, staffnumber, password, firstame FROM tblengusers WHERE staffnumber = ?";
         
-        if($stmt = mysqli_prepare($link, $sql)){
+        if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
+            $stmt->bind_param("s", $param_staffnumber);
             
             // Set parameters
-            $param_username = $username;
+            $param_staffnumber = $staffnumber;
             
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if($stmt->execute()){
                 // Store result
-                mysqli_stmt_store_result($stmt);
+                $stmt->store_result();
                 
-                // Check if username exists, if yes then verify password
-                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                // Check if staffnumber exists, if yes then verify password
+                if($stmt->num_rows == 1){                    
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                    if(mysqli_stmt_fetch($stmt)){
+                    $stmt->bind_result($id, $staffnumber, $hashed_password, $firstname);
+                    if($stmt->fetch()){
                         if(password_verify($password, $hashed_password)){
                             // Password is correct, so start a new session
                             session_start();
                             
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["userid"] = $id;
+                            $_SESSION["staffnumber"] = $staffnumber;  
+                            $_SESSION["firstname"] = $firstname;                          
                             
                             // Redirect user to welcome page
                             header("location: welcome.php");
@@ -72,19 +73,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     }
                 } else{
                     // Display an error message if username doesn't exist
-                    $username_err = "No account found with that username.";
+                    $staffnumber_err = "No account found with that staffnumber.";
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
             }
 
             // Close statement
-            mysqli_stmt_close($stmt);
+            $stmt->close();
         }
     }
     
     // Close connection
-    mysqli_close($link);
+    $mysqli->close();
 }
 ?>
  
@@ -104,10 +105,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
-                <span class="help-block"><?php echo $username_err; ?></span>
+            <div class="form-group <?php echo (!empty($staffnumber_err)) ? 'has-error' : ''; ?>">
+                <label>Staff Number</label>
+                <input type="text" name="staffnumber" class="form-control" value="<?php echo $staffnumber; ?>">
+                <span class="help-block"><?php echo $staffnumber_err; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                 <label>Password</label>
