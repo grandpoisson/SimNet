@@ -12,7 +12,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $firstname = "";
+$staffnumber = $password = $firstname = "";
 $staffnumber_err = $password_err = "";
  
 // Processing form data when form is submitted
@@ -35,7 +35,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($staffnumber_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT userid, staffnumber, password, firstame FROM tblengusers WHERE staffnumber = ?";
+        //$sql = "SELECT userid, staffnumber, password, firstame FROM tblengusers WHERE staffnumber = ?";
+        $sql = "SELECT staffnumber, password, firstame FROM tblengusers WHERE staffnumber = ?";
         
         if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -52,7 +53,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if staffnumber exists, if yes then verify password
                 if($stmt->num_rows == 1){                    
                     // Bind result variables
-                    $stmt->bind_result($id, $staffnumber, $hashed_password, $firstname);
+                    //$stmt->bind_result($id, $staffnumber, $hashed_password, $firstname);
+                    $stmt->bind_result($staffnumber, $hashed_password, $firstname);
                     if($stmt->fetch()){
                         if(password_verify($password, $hashed_password)){
                             // Password is correct, so start a new session
@@ -60,7 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
-                            $_SESSION["userid"] = $id;
+                            //$_SESSION["userid"] = $id;
                             $_SESSION["staffnumber"] = $staffnumber;  
                             $_SESSION["firstname"] = $firstname;                          
                             

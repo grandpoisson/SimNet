@@ -3,25 +3,25 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
+$staffnumber = $password = $confirm_password = $firstname = "";
+$staffnumber_err = $password_err = $confirm_password_err = $firstname_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
-    // Validate username
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter a username.";
+    // Validate staffnumber
+    if(empty(trim($_POST["staffnumber"]))){
+        $staffnumber_err = "Please enter a staffnumber.";
     } else{
         // Prepare a select statement
-        $sql = "SELECT id FROM users WHERE username = ?";
+        $sql = "SELECT userid FROM tblengusers WHERE staffnumber = ?";
         
         if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("s", $param_username);
+            $stmt->bind_param("s", $param_staffnumber);
             
             // Set parameters
-            $param_username = trim($_POST["username"]);
+            $param_staffnumber = trim($_POST["staffnumber"]);
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
@@ -29,9 +29,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $stmt->store_result();
                 
                 if($stmt->num_rows == 1){
-                    $username_err = "This username is already taken.";
+                    $staffnumber_err = "This staffnumber is already taken.";
                 } else{
-                    $username = trim($_POST["username"]);
+                    $staffnumber = trim($_POST["staffnumber"]);
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -41,12 +41,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $stmt->close();
         }
     }
-    
+    // Validate firstname
+    if(empty(trim($_POST["firstname"]))){
+        $firstname_err = "Please enter a firstname.";     
+    } else{
+        $firstname = trim($_POST["firstname"]);
+    }
+
+
     // Validate password
     if(empty(trim($_POST["password"]))){
         $password_err = "Please enter a password.";     
     } elseif(strlen(trim($_POST["password"])) < 6){
-        $password_err = "Password must have atleast 6 characters.";
+        $password_err = "Password must have at least 6 characters.";
     } else{
         $password = trim($_POST["password"]);
     }
@@ -62,17 +69,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
+    if(empty($staffnumber_err) && empty($password_err) && empty($confirm_password_err) && empty($firstname_err)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO tblengusers (staffnumber, firstname, password) VALUES (?, ?, ?)";
          
         if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("ss", $param_username, $param_password);
+            $stmt->bind_param("sss", $param_staffnumber, $param_firstname, $param_password);
             
             // Set parameters
-            $param_username = $username;
+            $param_staffnumber = $staffnumber;
+            $param_firstname = $firstname;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             
             // Attempt to execute the prepared statement
@@ -109,11 +117,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
-                <span class="help-block"><?php echo $username_err; ?></span>
-            </div>    
+            <div class="form-group <?php echo (!empty($staffnumber_err)) ? 'has-error' : ''; ?>">
+                <label>Staff Number</label>
+                <input type="text" name="staffnumber" class="form-control" value="<?php echo $staffnumber; ?>">
+                <span class="help-block"><?php echo $staffnumber_err; ?></span>
+            </div> 
+            <div class="form-group <?php echo (!empty($firstname_err)) ? 'has-error' : ''; ?>">
+                <label>First Name</label>
+                <input type="text" name="firstname" class="form-control" value="<?php echo $firstname; ?>">
+                <span class="help-block"><?php echo $firstname_err; ?></span>
+            </div>   
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
