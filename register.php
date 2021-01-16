@@ -14,7 +14,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $staffnumber_err = "Please enter a staffnumber.";
     } else{
         // Prepare a select statement
-        $sql = "SELECT userid FROM tblengusers WHERE staffnumber = ?";
+        $sql = "SELECT userID FROM tblengusers WHERE staffnumber = ?";
         
         if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
