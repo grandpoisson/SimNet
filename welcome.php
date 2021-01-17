@@ -20,7 +20,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <body>
     <div>
         <div class="dashboard">
-            <div class="member-dashboard">Welcome <b><?php echo htmlspecialchars($_SESSION["firstname"]); ?></b>. Welcome to SimNet.<br>
+            <div class="member-dashboard">Hi <b><?php echo htmlspecialchars($_SESSION["firstname"]); ?></b>, welcome to SimNet.<br>
                 Click to <a href="reset-password.php" class="reset-button">Reset Your Password</a>
                 Click to <a href="logout.php" class="logout-button">Logout</a>
             </div>
