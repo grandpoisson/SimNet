@@ -12,20 +12,19 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Welcome</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <style type="text/css">
-        body{ font: 14px sans-serif; text-align: center; }
-    </style>
+<meta charset="UTF-8">
+<title>User Login</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+<link href="./view/css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div class="page-header">
-        <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["firstname"]); ?></b>. Welcome to SimNet.</h1>
+    <div>
+        <div class="dashboard">
+            <div class="member-dashboard">Welcome <b><?php echo htmlspecialchars($_SESSION["firstname"]); ?></b>. Welcome to SimNet.<br>
+                Click to <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
+                Click to <a href="logout.php" class="logout-button">Logout</a>
+            </div>
+        </div>
     </div>
-    <p>
-        <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
-        <a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
-    </p>
 </body>
 </html>
